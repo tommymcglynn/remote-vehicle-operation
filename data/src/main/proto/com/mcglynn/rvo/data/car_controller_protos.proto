@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "com.mcglynn.rvo.data";
+option java_outer_classname = "CarControlProtos";
+
+message CarControllerCommand {
+    uint64 time = 1;
+    uint32 brake = 2;
+    uint32 throttle = 3;
+    sint32 steer = 4;
+    bool reverse = 5;
+}
+
+message CarData {
+    uint64 time = 1;
+    bool happy = 2;
+}

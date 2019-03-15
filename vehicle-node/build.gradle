@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+}
+
+group 'com.mcglynn'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':data')
+    compile project(':shared')
+    compile 'org.slf4j:slf4j-api:1.7.22'
+    compile 'com.pi4j:pi4j-core:1.2'
+    compile 'org.pushing-pixels:radiance-trident:1.0.2'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    runtime "org.slf4j:slf4j-log4j12:1.7.22"
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.mcglynn.rvo.vehicle.CarNodeApplication'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+def home = System.getenv("HOME")
+def vehicleHost = '192.168.1.25'
+def vehicleHome = '/home/vehicle'
+def vehicleAppDir = "${vehicleHome}/vehicle-node"
+def serviceScriptName = 'vehicle-node.sh'
+
+remotes {
+    pi {
+        host = vehicleHost
+        user = 'vehicle'
+        identity = file("${home}/.ssh/vehicle_id_rsa")
+        agent = true
+    }
+}
+
+task deploy {
+    dependsOn 'jar'
+    doLast {
+        ssh.run {
+            session(remotes.pi) {
+                execute "mkdir -p ${vehicleAppDir}"
+                put from: jar.archivePath, into: vehicleAppDir
+                put from: file("src/main/sh/${serviceScriptName}"), into: vehicleAppDir
+                execute "cd ${vehicleAppDir}"
+                execute "chmod 744 ${vehicleAppDir}/${serviceScriptName}"
+                execute "${vehicleAppDir}/${serviceScriptName} stop"
+                execute "${vehicleAppDir}/${serviceScriptName} start"
+            }
+        }
+    }
+}

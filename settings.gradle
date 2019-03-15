@@ -1,0 +1,6 @@
+rootProject.name = 'remote-vehicle-operation'
+include 'data'
+include 'vehicle-control'
+include 'shared'
+include 'vehicle-node'
+
