@@ -13,14 +13,17 @@ public class CarControllerClientHandler extends ChannelInboundHandlerAdapter {
 
     private CarController carController;
     private CarControllerConfig config;
+    private CarControlProtos.CarControllerCommand lastCommand;
 
     public CarControllerClientHandler(CarController carController, CarControllerConfig config) {
+        LOGGER.info("Initializing: {}", config);
         this.carController = carController;
         this.config = config;
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
+        LOGGER.info("Channel active");
         controlLoop(ctx);
     }
 
@@ -43,7 +46,11 @@ public class CarControllerClientHandler extends ChannelInboundHandlerAdapter {
 
     private void controlLoop(ChannelHandlerContext ctx) {
         ctx.channel().eventLoop().schedule(() -> {
-            ctx.writeAndFlush(carController.getCurrentCommand());
+            CarControlProtos.CarControllerCommand nextCommand = carController.getCurrentCommand();
+            if (lastCommand == null || !lastCommand.equals(nextCommand)) {
+                lastCommand = nextCommand;
+                ctx.writeAndFlush(nextCommand);
+            }
             controlLoop(ctx);
         }, config.getCommandDelay(), TimeUnit.MILLISECONDS);
     }

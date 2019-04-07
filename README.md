@@ -15,6 +15,14 @@ Required setup.
 * Read and update "build.gradle" to ensure all parameters are correct. In particular, check the "vehicleHost" to ensure it is the correct host where you can reach the Pi machine.
 * Install Pi4J. Allows control of GPIO pins from Java: https://pi4j.com
 
+## Deploy Vehicle Logic
+Use a gradle task to compile and deploy the vehicle application. The vehicle server will be restarted.
+
+    ./gradlew vehicle-node:deploy
+
+## Vehicle Logs
+Vehicle logs are at $home/logs/vehicle-node.log
+
 ## Basic Architecture
 The vehicle controller app starts and keeps trying to connect to the vehicle node. Once the connection is successful, the controller will start sending car commands, based on user input.
 

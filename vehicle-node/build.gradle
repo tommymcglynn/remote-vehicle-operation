@@ -47,16 +47,69 @@ remotes {
     }
 }
 
-task deploy {
-    dependsOn 'jar'
+task('deployRunScript') {
+    group 'Vehicle'
+    description 'Deploy shell script necessary for starting and stopping the vehicle server.'
     doLast {
         ssh.run {
             session(remotes.pi) {
                 execute "mkdir -p ${vehicleAppDir}"
-                put from: jar.archivePath, into: vehicleAppDir
                 put from: file("src/main/sh/${serviceScriptName}"), into: vehicleAppDir
-                execute "cd ${vehicleAppDir}"
                 execute "chmod 744 ${vehicleAppDir}/${serviceScriptName}"
+            }
+        }
+    }
+}
+
+task('deploy') {
+    group 'Vehicle'
+    description 'Compiles jar and uses SSH to copy jar to the remote vehicle at $vehicleHost. Will also restart the vehicle server.'
+    dependsOn 'jar', 'deployRunScript'
+    doLast {
+        ssh.run {
+            session(remotes.pi) {
+                put from: jar.archivePath, into: vehicleAppDir
+                execute "cd ${vehicleAppDir}"
+                execute "${vehicleAppDir}/${serviceScriptName} stop"
+                execute "${vehicleAppDir}/${serviceScriptName} start"
+            }
+        }
+    }
+}
+
+task('stopServer') {
+    group 'Vehicle'
+    description 'Stop the remote vehicle server.'
+    dependsOn 'deployRunScript'
+    doLast {
+        ssh.run {
+            session(remotes.pi) {
+                execute "${vehicleAppDir}/${serviceScriptName} stop"
+            }
+        }
+    }
+}
+
+task('startServer') {
+    group 'Vehicle'
+    description 'Start the remote vehicle server.'
+    dependsOn 'deployRunScript'
+    doLast {
+        ssh.run {
+            session(remotes.pi) {
+                execute "${vehicleAppDir}/${serviceScriptName} start"
+            }
+        }
+    }
+}
+
+task('restartServer') {
+    group 'Vehicle'
+    description 'Restart the remote vehicle server.'
+    dependsOn 'deployRunScript'
+    doLast {
+        ssh.run {
+            session(remotes.pi) {
                 execute "${vehicleAppDir}/${serviceScriptName} stop"
                 execute "${vehicleAppDir}/${serviceScriptName} start"
             }

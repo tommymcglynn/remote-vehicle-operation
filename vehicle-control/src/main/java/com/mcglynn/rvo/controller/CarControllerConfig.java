@@ -10,4 +10,11 @@ public class CarControllerConfig {
     public void setCommandDelay(int commandDelay) {
         this.commandDelay = commandDelay;
     }
+
+    @Override
+    public String toString() {
+        return "CarControllerConfig{" +
+                "commandDelay=" + commandDelay +
+                '}';
+    }
 }

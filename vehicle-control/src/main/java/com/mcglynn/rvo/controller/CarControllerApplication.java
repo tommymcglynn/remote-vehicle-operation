@@ -49,7 +49,7 @@ public class CarControllerApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         LOGGER.warn("Starting!");
-        Runtime.getRuntime().addShutdownHook(new RunThread());
+        Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
         URL uiViewResource = CarControllerApplication.class.getClassLoader().getResource("com/mcglynn/rvo/controller/ui/UIDebugCarController.fxml");
         if (uiViewResource == null) {
@@ -106,7 +106,7 @@ public class CarControllerApplication extends Application {
         }, delayMillis, TimeUnit.MILLISECONDS);
     }
 
-    public static class RunThread extends Thread {
+    public static class ShutdownThread extends Thread {
         @Override
         public void run() {
             shutDown();

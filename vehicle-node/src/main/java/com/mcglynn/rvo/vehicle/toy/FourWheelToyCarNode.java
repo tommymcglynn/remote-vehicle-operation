@@ -103,7 +103,7 @@ public class FourWheelToyCarNode implements CarNode {
     Integer calculateDriveWithSteer(Integer drive, Integer steer) {
         double d = drive;
         double s = steer;
-        double reduction = (s / Constants.MAX_STEER) * 0.8;
+        double reduction = (s / Constants.MAX_STEER) * 0.5;
         return (int) Math.round(d * (1 - reduction));
     }
 
@@ -112,7 +112,8 @@ public class FourWheelToyCarNode implements CarNode {
     }
 
     long calculateDriveChangeDuration(Integer driveStart, Integer driveEnd) {
-        return (long) (((double)Math.abs(driveEnd - driveStart) / 200d) * 1000d);
+        double maxSteer = Constants.MAX_STEER;
+        return (long) (((double)Math.abs(driveEnd - driveStart) / maxSteer) * 200d);
     }
 
     private void setPinValuesForDrive(int drive, GpioPinDigitalOutput drivePin, GpioPinDigitalOutput reversePin, GpioPinPwmOutput speedPin) {
