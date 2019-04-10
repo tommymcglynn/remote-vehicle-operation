@@ -31,20 +31,20 @@ public class FourWheelToyCarNode implements CarNode {
 
     private double steerDriveReduction;
     private double maxDriveDelayMillis;
-    private Integer leftDrive;
-    private Integer rightDrive;
-    private Integer leftDriveTarget;
-    private Integer rightDriveTarget;
+    private double leftDrive;
+    private double rightDrive;
+    private double leftDriveTarget;
+    private double rightDriveTarget;
     private Timeline leftDriveTimeline;
     private Timeline rightDriveTimeline;
 
     FourWheelToyCarNode(double steerDriveReduction, double maxDriveDelayMillis) {
         this.steerDriveReduction = steerDriveReduction;
         this.maxDriveDelayMillis = maxDriveDelayMillis;
-        leftDrive = 0;
-        rightDrive = 0;
-        leftDriveTarget = 0;
-        rightDriveTarget = 0;
+        leftDrive = 0d;
+        rightDrive = 0d;
+        leftDriveTarget = 0d;
+        rightDriveTarget = 0d;
         leftDriveTimeline = null;
         rightDriveTimeline = null;
     }
@@ -125,11 +125,11 @@ public class FourWheelToyCarNode implements CarNode {
         return (int) Math.round((double) Math.abs(steer) * SPIN_THROTTLE_REDUCTION * THROTTLE_MULTIPLIER);
     }
 
-    long calculateDriveChangeDuration(Integer driveStart, Integer driveEnd) {
-        return (long) (((double)Math.abs(driveEnd - driveStart) / Constants.MAX_THROTTLE) * maxDriveDelayMillis);
+    long calculateDriveChangeDuration(double driveStart, double driveEnd) {
+        return (long) ((Math.abs(driveEnd - driveStart) / Constants.MAX_THROTTLE) * maxDriveDelayMillis);
     }
 
-    private void setPinValuesForDrive(int drive, GpioPinDigitalOutput drivePin, GpioPinDigitalOutput reversePin, GpioPinPwmOutput speedPin) {
+    private void setPinValuesForDrive(double drive, GpioPinDigitalOutput drivePin, GpioPinDigitalOutput reversePin, GpioPinPwmOutput speedPin) {
         if (drive == 0) {
             drivePin.setState(PinState.LOW);
             reversePin.setState(PinState.LOW);
@@ -138,7 +138,7 @@ public class FourWheelToyCarNode implements CarNode {
         else {
             drivePin.setState(PinState.HIGH);
             reversePin.setState(drive > 0 ? PinState.LOW : PinState.HIGH);
-            speedPin.setPwm((int) Math.round(Math.abs((double) drive) * PWM_RANGE_DRIVE_REDUCTION));
+            speedPin.setPwm((int) Math.round(Math.abs(drive) * PWM_RANGE_DRIVE_REDUCTION));
         }
     }
 
@@ -148,32 +148,32 @@ public class FourWheelToyCarNode implements CarNode {
         setRightDriveTarget(rightDriveTarget);
     }
 
-    public Integer getLeftDrive() {
+    public double getLeftDrive() {
         return leftDrive;
     }
 
-    public void setLeftDrive(Integer leftDrive) {
+    public void setLeftDrive(double leftDrive) {
         this.leftDrive = leftDrive;
         LOGGER.debug(String.format("left-drive: %s", leftDrive));
         setPinValuesForDrive(leftDrive, leftDrivePin, leftReversePin, leftSpeedPin);
     }
 
-    public Integer getRightDrive() {
+    public double getRightDrive() {
         return rightDrive;
     }
 
-    public void setRightDrive(Integer rightDrive) {
+    public void setRightDrive(double rightDrive) {
         this.rightDrive = rightDrive;
         LOGGER.debug(String.format("right-drive: %s", rightDrive));
         setPinValuesForDrive(rightDrive, rightDrivePin, rightReversePin, rightSpeedPin);
     }
 
-    public Integer getLeftDriveTarget() {
+    public double getLeftDriveTarget() {
         return leftDriveTarget;
     }
 
-    public void setLeftDriveTarget(Integer leftDriveTarget) {
-        if (this.leftDriveTarget.equals(leftDriveTarget)) return;
+    public void setLeftDriveTarget(double leftDriveTarget) {
+        if (this.leftDriveTarget == leftDriveTarget) return;
         if (leftDriveTimeline != null) {
             leftDriveTimeline.cancel();
         }
@@ -184,12 +184,12 @@ public class FourWheelToyCarNode implements CarNode {
         leftDriveTimeline.play();
     }
 
-    public Integer getRightDriveTarget() {
+    public double getRightDriveTarget() {
         return rightDriveTarget;
     }
 
-    public void setRightDriveTarget(Integer rightDriveTarget) {
-        if (this.rightDriveTarget.equals(rightDriveTarget)) return;
+    public void setRightDriveTarget(double rightDriveTarget) {
+        if (this.rightDriveTarget == rightDriveTarget) return;
         if (rightDriveTimeline != null) {
             rightDriveTimeline.cancel();
         }

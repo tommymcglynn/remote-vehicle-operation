@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 public class AnimationTestApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(AnimationTestApplication.class);
 
-    private Integer amount = 0;
+    private double amount = 0d;
 
     public static void main(String[] args) {
         try {
@@ -20,17 +20,17 @@ public class AnimationTestApplication {
 
     private void run() throws InterruptedException {
         Timeline timeline = new Timeline(this);
-        timeline.addPropertyToInterpolate("amount", amount, 100);
+        timeline.addPropertyToInterpolate("amount", amount, 100d);
         timeline.play();
 
         Thread.sleep(3000);
     }
 
-    public Integer getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
         LOGGER.info(String.format("amount=%s", amount));
     }
