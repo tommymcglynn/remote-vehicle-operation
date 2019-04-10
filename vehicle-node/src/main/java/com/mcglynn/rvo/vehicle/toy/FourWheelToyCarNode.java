@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
 public class FourWheelToyCarNode implements CarNode {
     private static final Logger LOGGER = LoggerFactory.getLogger(FourWheelToyCarNode.class);
     private static final double THROTTLE_MULTIPLIER = 1d;
-    private static final double SPIN_THROTTLE_REDUCTION = (double) Constants.MAX_THROTTLE / (double) Constants.MAX_STEER;
+    private static final double SPIN_THROTTLE_REDUCTION = Constants.MAX_THROTTLE / Constants.MAX_STEER;
     private static final int PWM_RANGE = 20;
-    private static final double PWM_RANGE_DRIVE_REDUCTION = (double) PWM_RANGE / 100d;
+    private static final double PWM_RANGE_DRIVE_REDUCTION = (double) PWM_RANGE / Constants.MAX_THROTTLE;
 
     private static boolean pinsProvisioned = false;
     private static GpioPinDigitalOutput leftDrivePin;
@@ -29,14 +29,28 @@ public class FourWheelToyCarNode implements CarNode {
     private static GpioPinDigitalOutput rightReversePin;
     private static GpioPinPwmOutput rightSpeedPin;
 
-    private Integer leftDrive = 0;
-    private Integer rightDrive = 0;
-    private Integer leftDriveTarget = 0;
-    private Integer rightDriveTarget = 0;
-    private Timeline leftDriveTimeline = null;
-    private Timeline rightDriveTimeline = null;
+    private double steerDriveReduction;
+    private double maxDriveDelayMillis;
+    private Integer leftDrive;
+    private Integer rightDrive;
+    private Integer leftDriveTarget;
+    private Integer rightDriveTarget;
+    private Timeline leftDriveTimeline;
+    private Timeline rightDriveTimeline;
+
+    FourWheelToyCarNode(double steerDriveReduction, double maxDriveDelayMillis) {
+        this.steerDriveReduction = steerDriveReduction;
+        this.maxDriveDelayMillis = maxDriveDelayMillis;
+        leftDrive = 0;
+        rightDrive = 0;
+        leftDriveTarget = 0;
+        rightDriveTarget = 0;
+        leftDriveTimeline = null;
+        rightDriveTimeline = null;
+    }
 
     public FourWheelToyCarNode() {
+        this(Double.valueOf(System.getProperty("fwtc.steer.drive.reduction", "0.5")), Double.valueOf(System.getProperty("fwtc.max.drive.delay.millis", "100")));
         provisionGpioPins();
     }
 
@@ -103,7 +117,7 @@ public class FourWheelToyCarNode implements CarNode {
     Integer calculateDriveWithSteer(Integer drive, Integer steer) {
         double d = drive;
         double s = steer;
-        double reduction = (s / Constants.MAX_STEER) * 0.5;
+        double reduction = (s / Constants.MAX_STEER) * steerDriveReduction;
         return (int) Math.round(d * (1 - reduction));
     }
 
@@ -112,8 +126,7 @@ public class FourWheelToyCarNode implements CarNode {
     }
 
     long calculateDriveChangeDuration(Integer driveStart, Integer driveEnd) {
-        double maxSteer = Constants.MAX_STEER;
-        return (long) (((double)Math.abs(driveEnd - driveStart) / maxSteer) * 200d);
+        return (long) (((double)Math.abs(driveEnd - driveStart) / Constants.MAX_THROTTLE) * maxDriveDelayMillis);
     }
 
     private void setPinValuesForDrive(int drive, GpioPinDigitalOutput drivePin, GpioPinDigitalOutput reversePin, GpioPinPwmOutput speedPin) {

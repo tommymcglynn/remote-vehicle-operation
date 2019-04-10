@@ -11,7 +11,7 @@ public class FourWheelToyCarNodeTest {
 
     @Before
     public void before() {
-        carNode = new FourWheelToyCarNode();
+        carNode = new FourWheelToyCarNode(0.5d, 100d);
     }
 
     @Test
@@ -24,9 +24,9 @@ public class FourWheelToyCarNodeTest {
 
     @Test
     public void calculateDriveChangeDuration() {
-        assertEquals(1000, carNode.calculateDriveChangeDuration(0, 100));
+        assertEquals(100, carNode.calculateDriveChangeDuration(0, 100));
         assertEquals(0, carNode.calculateDriveChangeDuration(100, 100));
-        assertEquals(2000, carNode.calculateDriveChangeDuration(-100, 100));
-        assertEquals(300, carNode.calculateDriveChangeDuration(20, 50));
+        assertEquals(200, carNode.calculateDriveChangeDuration(-100, 100));
+        assertEquals(30, carNode.calculateDriveChangeDuration(20, 50));
     }
 }

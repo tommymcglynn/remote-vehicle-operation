@@ -24,10 +24,10 @@ public class SimulatedCarNode implements CarNode {
 
     @Override
     public void handleCommand(CarControlProtos.CarControllerCommand command) {
-        LOGGER.debug(String.format("Received car command: throttle(%s) steer(%s)", command.getThrottle(), command.getSteer()));
+        LOGGER.debug(String.format("Received car command: throttle(%s) steer(%s) reverse(%s)", command.getThrottle(), command.getSteer(), command.getReverse()));
         if (lastCommand == null || !lastCommand.equals(command)) {
             lastCommand = command;
-            LOGGER.info(String.format("New car command: throttle(%s) steer(%s)", command.getThrottle(), command.getSteer()));
+            LOGGER.info(String.format("New car command: throttle(%s) steer(%s) reverse(%s)", command.getThrottle(), command.getSteer(), command.getReverse()));
         }
     }
 }

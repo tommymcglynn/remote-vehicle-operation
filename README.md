@@ -49,6 +49,12 @@ These are initial setup steps.
 * Drive 1: 11 enable, 13 reverse, 15 speed (PWM)
 * Drive 2: 29 enable, 31 reverse, 33 speed (PWM)
 
+### Configuration
+These are system properties which can be used to configure the FourWheelToyCarNode
+
+* fwtc.steer.drive.reduction (default: 0.5) - The amount of drive reduction multiplier for steer
+* fwtc.max.drive.delay.millis (default: 100) - The millisecond delay to apply max motor drive
+
 
 ## Vehicle Control
 Keeps trying to connect to a vehicle node server. Once successful, will start generating and sending controller commands. Also receives vehicle state from vehicle node.

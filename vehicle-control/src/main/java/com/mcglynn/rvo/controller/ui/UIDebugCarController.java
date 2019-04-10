@@ -97,9 +97,9 @@ public class UIDebugCarController extends Parent implements Initializable, CarCo
 
     @Override
     public CarControlProtos.CarControllerCommand getCurrentCommand() {
-        int targetThrottle = 0;
-        int targetBrake = 0;
-        int targetSteer = 0;
+        double targetThrottle = 0;
+        double targetBrake = 0;
+        double targetSteer = 0;
         boolean targetReverse = false;
         // reverse: down
         // stop: down, up
@@ -163,9 +163,9 @@ public class UIDebugCarController extends Parent implements Initializable, CarCo
         }
 
         return CarControlProtos.CarControllerCommand.newBuilder()
-                .setBrake(targetBrake)
-                .setThrottle(targetThrottle)
-                .setSteer(targetSteer)
+                .setBrake((int) targetBrake)
+                .setThrottle((int) targetThrottle)
+                .setSteer((int) targetSteer)
                 .setReverse(targetReverse)
                 .build();
     }
