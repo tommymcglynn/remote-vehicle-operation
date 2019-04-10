@@ -17,6 +17,8 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class CarNodeApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(CarNodeApplication.class);
     private static EventLoopGroup bossGroup;
@@ -24,9 +26,11 @@ public class CarNodeApplication {
 
     public static void main(String[] args) throws Exception {
         LOGGER.warn("Starting!");
-        Runtime.getRuntime().addShutdownHook(new RunThread());
+        Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
         int port = Integer.parseInt(System.getProperty("car.port", "8080"));
+        String carNodeClassName = System.getProperty("car.node.class", "com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode");
+        CarNode carNode = initCarNode(carNodeClassName);
         bossGroup = new NioEventLoopGroup(); // (1)
         workerGroup = new NioEventLoopGroup();
         ServerBootstrap b = new ServerBootstrap(); // (2)
@@ -39,7 +43,7 @@ public class CarNodeApplication {
                         ch.pipeline().addLast(new ProtobufDecoder(CarControlProtos.CarControllerCommand.getDefaultInstance()));
                         ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
                         ch.pipeline().addLast(new ProtobufEncoder());
-                        ch.pipeline().addLast(new CarNodeServerHandler(new FourWheelToyCarNode()));
+                        ch.pipeline().addLast(new CarNodeServerHandler(carNode));
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, 128)          // (5)
@@ -54,13 +58,32 @@ public class CarNodeApplication {
         f.channel().closeFuture().sync();
     }
 
+    private static CarNode initCarNode(String carNodeClassName) {
+        Class<?> carNodeClass;
+        try {
+            carNodeClass = CarNodeApplication.class.getClassLoader().loadClass(carNodeClassName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Failed to find car node class", e);
+        }
+        if (!CarNode.class.isAssignableFrom(carNodeClass)) {
+            throw new RuntimeException(String.format("Class is not a CarNode: %s", carNodeClassName));
+        }
+        Object instance;
+        try {
+            instance = carNodeClass.getConstructor().newInstance();
+        } catch (InstantiationException|IllegalAccessException|InvocationTargetException|NoSuchMethodException e) {
+            throw new RuntimeException("Failed to construct car node class", e);
+        }
+        return (CarNode) instance;
+    }
+
     private static void shutDown() {
         LOGGER.warn("Shutdown!");
         workerGroup.shutdownGracefully();
         bossGroup.shutdownGracefully();
     }
 
-    public static class RunThread extends Thread {
+    public static class ShutdownThread extends Thread {
         @Override
         public void run() {
             shutDown();
