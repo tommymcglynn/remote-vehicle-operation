@@ -1,6 +1,7 @@
 package com.mcglynn.rvo.controller;
 
 import com.mcglynn.rvo.data.CarControlProtos;
+import com.mcglynn.rvo.util.ThresholdAggregator;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
@@ -12,13 +13,20 @@ public class CarControllerClientHandler extends ChannelInboundHandlerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(CarControllerClientHandler.class);
 
     private CarController carController;
-    private CarControllerConfig config;
+    private CarClientConfig config;
     private CarControlProtos.CarControllerCommand lastCommand;
+    private long lastCommandTime;
+    private ThresholdAggregator<Long> latencyAggregator;
 
-    public CarControllerClientHandler(CarController carController, CarControllerConfig config) {
+    public CarControllerClientHandler(CarController carController, CarClientConfig config) {
         LOGGER.info("Initializing: {}", config);
         this.carController = carController;
         this.config = config;
+        lastCommandTime = 0L;
+        latencyAggregator = new ThresholdAggregator<>(10, longs -> {
+            double averageLatency = longs.stream().mapToDouble(Long::doubleValue).average().orElse(Double.NaN);
+            LOGGER.info("Average ping latency: {}ms", averageLatency);
+        });
     }
 
     @Override
@@ -30,12 +38,14 @@ public class CarControllerClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         CarControlProtos.CarData m = (CarControlProtos.CarData) msg;
+        long latency = m.getTime() - lastCommandTime;
         try {
             carController.handleCarData(m);
         }
         catch (Exception e) {
             LOGGER.error("Failed to handle car data", e);
         }
+        latencyAggregator.add(latency);
     }
 
     @Override
@@ -47,11 +57,13 @@ public class CarControllerClientHandler extends ChannelInboundHandlerAdapter {
     private void controlLoop(ChannelHandlerContext ctx) {
         ctx.channel().eventLoop().schedule(() -> {
             CarControlProtos.CarControllerCommand nextCommand = carController.getCurrentCommand();
-            if (lastCommand == null || !lastCommand.equals(nextCommand)) {
+            long timeSinceLastCommand = System.currentTimeMillis() - lastCommandTime;
+            if (lastCommand == null || !lastCommand.equals(nextCommand) || timeSinceLastCommand >= config.getCommandDelayMax()) {
                 lastCommand = nextCommand;
+                lastCommandTime = System.currentTimeMillis();
                 ctx.writeAndFlush(nextCommand);
             }
             controlLoop(ctx);
-        }, config.getCommandDelay(), TimeUnit.MILLISECONDS);
+        }, config.getCommandDelayMin(), TimeUnit.MILLISECONDS);
     }
 }

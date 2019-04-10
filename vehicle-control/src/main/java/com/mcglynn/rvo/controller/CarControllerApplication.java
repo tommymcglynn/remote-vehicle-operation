@@ -64,9 +64,11 @@ public class CarControllerApplication extends Application {
 
         carHost = System.getProperty("car.host", "localhost");
         carPort = Integer.parseInt(System.getProperty("car.port", "8080"));
-        int commandDelay = Integer.parseInt(System.getProperty("controller.command.delay", "30"));
-        CarControllerConfig controllerConfig = CarControllerConfigBuilder.aCarControllerConfig()
-                .withCommandDelay(commandDelay)
+        int commandDelayMin = Integer.parseInt(System.getProperty("controller.command.delay.min", "30"));
+        int commandDelayMax = Integer.parseInt(System.getProperty("controller.command.delay.max", "300"));
+        CarClientConfig controllerConfig = CarClientConfigBuilder.aCarClientConfig()
+                .withCommandDelayMin(commandDelayMin)
+                .withCommandDelayMax(commandDelayMax)
                 .build();
         carConnectionGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();

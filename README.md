@@ -57,11 +57,12 @@ Keeps trying to connect to a vehicle node server. Once successful, will start ge
 
 * CarControllerApplication is the main entry point
 * CarControllerClientHandler handles socket channel events
+* CarClientConfig is a configuration for CarControllerClientHandler
 * CarController is an interface which exposes car commands via CarControllerCommand and handles vehicle state via CarData
-* CarControllerConfig is a configuration for CarController (but really configures the behavior of CarControllerClientHandler at the momment... maybe should rename this)
 
 ### Configuration
 These are system properties which can be used to configure the vehicle controller.
 
 * car.host (default: localhost) - The host that the controller will use to connect to the vehicle node
 * car.port (default: 8080) - The port that the controller will use to connect to the vehicle node
+* controller.command.delay (default: 30) - Millisecond delay between sending car commands
