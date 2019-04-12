@@ -1,7 +1,3 @@
-plugins {
-    id 'java'
-}
-
 group 'com.mcglynn'
 version '1.0-SNAPSHOT'
 
@@ -14,13 +10,9 @@ repositories {
 dependencies {
     compile project(':data')
     compile project(':shared')
-    compile 'org.slf4j:slf4j-api:1.7.22'
     compile 'com.pi4j:pi4j-core:1.2'
     compile 'org.pushing-pixels:radiance-trident:1.0.2'
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-
-    runtime "org.slf4j:slf4j-log4j12:1.7.22"
+    compile 'net.bramp.ffmpeg:ffmpeg:0.6.2'
 }
 
 jar {
