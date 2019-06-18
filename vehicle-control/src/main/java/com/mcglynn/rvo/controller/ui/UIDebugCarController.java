@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -46,6 +48,8 @@ public class UIDebugCarController extends Parent implements Initializable, CarCo
     private Label downLabel;
     @FXML
     private Label carLabel;
+    @FXML
+    private ImageView imageView;
 
     public UIDebugCarController() {
     }
@@ -173,6 +177,10 @@ public class UIDebugCarController extends Parent implements Initializable, CarCo
     @Override
     public void handleCarData(CarControlProtos.CarData carData) {
         Platform.runLater(() -> carLabel.setText(String.format("Car: %s, happy=%s", DATE_FORMAT.format(new Date(carData.getTime())), carData.getHappy())));
+    }
+
+    public void setImage(Image image) {
+        imageView.setImage(image);
     }
 
     private void setLabelColor(Label label, boolean isOn) {

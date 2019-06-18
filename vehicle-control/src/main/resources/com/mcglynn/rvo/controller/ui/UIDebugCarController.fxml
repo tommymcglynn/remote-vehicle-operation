@@ -5,19 +5,24 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcglynn.rvo.controller.ui.UIDebugCarController">
-    <VBox>
-        <children>
-            <Label fx:id="leftLabel" text="Left" />
-            <Label fx:id="rightLabel" text="Right" />
-            <Label fx:id="upLabel" text="Up" />
-            <Label fx:id="downLabel" text="Down" />
-            <Label fx:id="throttleLabel" text="Throttle: 0" />
-            <Label fx:id="brakeLabel" text="Brake: 0" />
-            <Label fx:id="steerLabel" text="Steer: 0" />
-            <Label fx:id="reverseLabel" text="Reverse: 0" />
-            <Label fx:id="carLabel" text="Car:" />
-         <Button mnemonicParsing="false" onAction="#onStartClick" text="Start" />
-        </children>
-    </VBox>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.image.ImageView?>
+<AnchorPane prefHeight="1400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcglynn.rvo.controller.ui.UIDebugCarController">
+    <HBox>
+        <VBox>
+            <children>
+                <Label fx:id="leftLabel" text="Left" />
+                <Label fx:id="rightLabel" text="Right" />
+                <Label fx:id="upLabel" text="Up" />
+                <Label fx:id="downLabel" text="Down" />
+                <Label fx:id="throttleLabel" text="Throttle: 0" />
+                <Label fx:id="brakeLabel" text="Brake: 0" />
+                <Label fx:id="steerLabel" text="Steer: 0" />
+                <Label fx:id="reverseLabel" text="Reverse: 0" />
+                <Label fx:id="carLabel" text="Car:" />
+                <Button mnemonicParsing="false" onAction="#onStartClick" text="Start" />
+            </children>
+        </VBox>
+        <ImageView fx:id="imageView" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true"/>
+    </HBox>
 </AnchorPane>

@@ -9,11 +9,18 @@ Use a gradle task to compile and deploy the vehicle application. The vehicle ser
 
     ./gradlew vehicle-node:deploy
 
-### Configuration
+### Run Configuration
 These are system properties which can be used to configure the vehicle node.
 
 * car.port (default: 8080) - This is the port that the vehicle server will run on.
 * car.node.class (default: com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode) - This is the implementation class of CarNode which will be used to handle car commands and operate a vehicle.
+
+### Build Configuration
+Configure these properties appropriately in your Gradle directory "~/.gradle"
+
+    // This points to compiled OpenCV bindings for Java
+    // See https://github.com/opencv/opencv
+    opencvDir=/Users/tommy/opencv/build
 
 ### Vehicle Node Architecture
 
