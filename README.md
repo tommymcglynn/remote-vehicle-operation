@@ -14,6 +14,7 @@ These are system properties which can be used to configure the vehicle node.
 
 * car.port (default: 8080) - This is the port that the vehicle server will run on.
 * car.node.class (default: com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode) - This is the implementation class of CarNode which will be used to handle car commands and operate a vehicle.
+* video.receive.port (default: 8090) - This is the port that the vehicle controller will receive video on.
 
 ### Build Configuration
 Configure these properties appropriately in your Gradle directory "~/.gradle"

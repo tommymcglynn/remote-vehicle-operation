@@ -10,4 +10,6 @@ repositories {
 dependencies {
     compile fileTree(dir: "${opencvDir}/bin", include: "*.jar")
     compile 'io.netty:netty-all:4.1.+'
+
+    testCompile "org.mockito:mockito-core:2.28.2"
 }

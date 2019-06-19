@@ -1,19 +1,15 @@
 package com.mcglynn.rvo.controller;
 
 import com.mcglynn.rvo.controller.ui.UIDebugCarController;
+import com.mcglynn.rvo.controller.video.JpegVideoInboundHandler;
 import com.mcglynn.rvo.data.CarControlProtos;
-import com.mcglynn.rvo.image.ImageBufferReceiver;
+import com.mcglynn.rvo.util.Constants;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -26,7 +22,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +38,7 @@ public class CarControllerApplication extends Application {
 
     private String carHost;
     private int carPort;
+    private int videoReceivePort;
     private Bootstrap bootstrap;
     private UIDebugCarController carControllerUi;
 
@@ -76,6 +72,7 @@ public class CarControllerApplication extends Application {
 
         carHost = System.getProperty("car.host", "localhost");
         carPort = Integer.parseInt(System.getProperty("car.port", "8080"));
+        videoReceivePort = Integer.parseInt(System.getProperty("video.receive.port", "8090"));
         int commandDelayMin = Integer.parseInt(System.getProperty("controller.command.delay.min", "30"));
         int commandDelayMax = Integer.parseInt(System.getProperty("controller.command.delay.max", "300"));
         CarClientConfig controllerConfig = CarClientConfigBuilder.aCarClientConfig()
@@ -111,30 +108,14 @@ public class CarControllerApplication extends Application {
                 .handler(new ChannelInitializer<NioDatagramChannel>() {
                     @Override
                     public void initChannel(final NioDatagramChannel ch) throws Exception {
-
-                        ChannelPipeline p = ch.pipeline();
-                        p.addLast(new SimpleChannelInboundHandler<DatagramPacket>() {
-
-                            ImageBufferReceiver imageBufferReceiver = new ImageBufferReceiver(this::handleImage);
-
-                            @Override
-                            protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
-                                ByteBuf content = packet.content();
-                                imageBufferReceiver.put(content);
-                            }
-
-                            void handleImage(Image image) {
-                                Platform.runLater(() -> carControllerUi.setImage(image));
-                            }
-                        });
+                        ch.pipeline().addLast(new JpegVideoInboundHandler((image) -> Platform.runLater(() -> carControllerUi.setImage(image)), Constants.DEFAULT_IMAGE_STREAM_MARKER));
                     }
                 });
 
         // Bind and start to accept incoming connections.
-        Integer pPort = 9956;
         videoReceiveGroup.schedule(() -> {
             try {
-                b.bind(pPort).sync().channel().closeFuture().await();
+                b.bind(videoReceivePort).sync().channel().closeFuture().await();
             }
             catch (InterruptedException e) {
                 LOGGER.error("Video receive interrupted", e);
