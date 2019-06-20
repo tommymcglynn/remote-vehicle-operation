@@ -2,7 +2,7 @@
 Remotely operate a vehicle. Currently designed to operate a Raspberry Pi equiped vehicle.
 
 ## Vehicle Node
-Accepts car controller commands, translates commands into vehicle control and responds with vehicle state information.
+Accepts car controller commands, translates commands into vehicle control and responds with vehicle state information. Also sends video data to the target specified by controller command.
 
 ### Deploy Vehicle Node
 Use a gradle task to compile and deploy the vehicle application. The vehicle server will be restarted.
@@ -12,9 +12,9 @@ Use a gradle task to compile and deploy the vehicle application. The vehicle ser
 ### Run Configuration
 These are system properties which can be used to configure the vehicle node.
 
+* java.library.path - Must be set to the location of compiled native OpenCV libraries. Example: /Users/tommy/opencv/build/lib
 * car.port (default: 8080) - This is the port that the vehicle server will run on.
 * car.node.class (default: com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode) - This is the implementation class of CarNode which will be used to handle car commands and operate a vehicle.
-* video.receive.port (default: 8090) - This is the port that the vehicle controller will receive video on.
 
 ### Build Configuration
 Configure these properties appropriately in your Gradle directory "~/.gradle"
@@ -80,3 +80,4 @@ These are system properties which can be used to configure the vehicle controlle
 * car.host (default: localhost) - The host that the controller will use to connect to the vehicle node
 * car.port (default: 8080) - The port that the controller will use to connect to the vehicle node
 * controller.command.delay (default: 30) - Millisecond delay between sending car commands
+* video.receive.port (default: 8090) - This is the port that the vehicle controller will receive video on
