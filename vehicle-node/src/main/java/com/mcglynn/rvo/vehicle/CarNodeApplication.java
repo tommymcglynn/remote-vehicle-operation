@@ -1,7 +1,6 @@
 package com.mcglynn.rvo.vehicle;
 
 import com.mcglynn.rvo.data.CarControlProtos;
-import com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -14,6 +13,7 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import org.opencv.core.Core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +26,7 @@ public class CarNodeApplication {
 
     public static void main(String[] args) throws Exception {
         LOGGER.warn("Starting!");
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
 
         int port = Integer.parseInt(System.getProperty("car.port", "8080"));

@@ -1,35 +1,16 @@
 package com.mcglynn.rvo.vehicle.simulation;
 
-import com.mcglynn.rvo.camera.CameraCapture;
-import com.mcglynn.rvo.util.Constants;
-import com.mcglynn.rvo.util.StreamMarker;
+import com.mcglynn.rvo.vehicle.camera.CameraVideoSender;
 import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfInt;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public class VideoSendApplication {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VideoSendApplication.class);
-    private static final int DEFAULT_JPEG_QUALITY = 20;
-    private static final int CAMERA_FRAMES_PER_SECOND = 15;
-    private static final int DEFAULT_CAMERA_ID = 1;
     private static final int DEFAULT_VIDEO_SEND_PORT = 8090;
 
-    private CameraCapture cameraCapture;
-    private DatagramSocket videoSocket;
-    private InetAddress videoTargetAddress;
-    private StreamMarker imageStreamMarker = Constants.DEFAULT_IMAGE_STREAM_MARKER;
+    private CameraVideoSender cameraVideoSender = new CameraVideoSender();
 
     public static void main(String[] args) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -40,68 +21,12 @@ public class VideoSendApplication {
 
     private void start() {
         LOGGER.info("Starting...");
-
-        try {
-            videoSocket = new DatagramSocket();
-        } catch (SocketException e) {
-            throw new RuntimeException("Failed to create data socket", e);
-        }
-        try {
-            videoTargetAddress = InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            throw new RuntimeException("Failed to create video target address", e);
-        }
-
-        cameraCapture = new CameraCapture(DEFAULT_CAMERA_ID, CAMERA_FRAMES_PER_SECOND, this::handleCameraFrame);
-        cameraCapture.startCamera();
+        cameraVideoSender.setVideoTargetAndStartSendingVideo("localhost", DEFAULT_VIDEO_SEND_PORT);
     }
 
     private void shutdown() {
         LOGGER.info("Shutting down...");
-
-        if (cameraCapture != null) {
-            cameraCapture.stopCamera();
-        }
+        cameraVideoSender.stopSendingVideo();
     }
 
-    private void handleCameraFrame(Mat frame) {
-        byte[] imageBytes = cameraFrameToBytes(frame);
-        byte[] payloadBytes;
-        try {
-            payloadBytes = imageStreamMarker.wrapData(imageBytes);
-        } catch (IOException e) {
-            LOGGER.error("Failed to write bytes for output packet", e);
-            return;
-        }
-        int packetSize = 1024;
-        int i = 0;
-        while (i < payloadBytes.length) {
-            int length = Math.min(payloadBytes.length - i, packetSize);
-            DatagramPacket packet = new DatagramPacket(payloadBytes, i, length, videoTargetAddress, DEFAULT_VIDEO_SEND_PORT);
-            try {
-                videoSocket.send(packet);
-            } catch (IOException e) {
-                LOGGER.error("Failed to send video packet", e);
-                break;
-            }
-            i += packetSize;
-        }
-
-
-    }
-
-    private byte[] cameraFrameToBytes(Mat frame) {
-        MatOfByte jpegBuffer = new MatOfByte();
-        MatOfInt params = new MatOfInt(Imgcodecs.CV_IMWRITE_JPEG_QUALITY, DEFAULT_JPEG_QUALITY);
-        Imgcodecs.imencode(".jpg", frame, jpegBuffer, params);
-        return jpegBuffer.toArray();
-    }
-
-    private byte[] toByteArray(int value) {
-        return new byte[] {
-                (byte)(value >> 24),
-                (byte)(value >> 16),
-                (byte)(value >> 8),
-                (byte)value };
-    }
 }

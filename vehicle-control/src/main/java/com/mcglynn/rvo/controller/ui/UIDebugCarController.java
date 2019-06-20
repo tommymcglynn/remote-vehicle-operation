@@ -37,6 +37,9 @@ public class UIDebugCarController extends Parent implements Initializable, CarCo
     private boolean isUpPressed = false;
     private boolean isDownPressed = false;
     private Set<KeyCode> pressedKeys = new HashSet<>();
+    private String videoReceiveHost = "";
+    private int videoReceivePort = 0;
+    private boolean needToSendVideoTarget = true;
 
     @FXML
     private Label leftLabel;
@@ -97,6 +100,20 @@ public class UIDebugCarController extends Parent implements Initializable, CarCo
 
     public void onStartClick(ActionEvent actionEvent) {
         addEventListeners();
+    }
+
+    public String getVideoReceiveHost() {
+        return videoReceiveHost;
+    }
+
+    public int getVideoReceivePort() {
+        return videoReceivePort;
+    }
+
+    public void setVideoReceive(String videoReceiveHost, int videoReceivePort) {
+        this.videoReceiveHost = videoReceiveHost;
+        this.videoReceivePort = videoReceivePort;
+        needToSendVideoTarget = true;
     }
 
     @Override
@@ -166,17 +183,29 @@ public class UIDebugCarController extends Parent implements Initializable, CarCo
             targetSteer = Constants.MAX_STEER;
         }
 
-        return CarControlProtos.CarControllerCommand.newBuilder()
+        CarControlProtos.CarControllerCommand.Builder commandBuilder = CarControlProtos.CarControllerCommand.newBuilder()
                 .setBrake((int) targetBrake)
                 .setThrottle((int) targetThrottle)
                 .setSteer((int) targetSteer)
-                .setReverse(targetReverse)
+                .setReverse(targetReverse);
+
+        if (needToSendVideoTarget) {
+            commandBuilder.setVideoTargetHost(videoReceiveHost);
+            commandBuilder.setVideoTargetPort(videoReceivePort);
+            needToSendVideoTarget = false;
+        }
+
+        return commandBuilder
                 .build();
     }
 
     @Override
     public void handleCarData(CarControlProtos.CarData carData) {
         Platform.runLater(() -> carLabel.setText(String.format("Car: %s, happy=%s", DATE_FORMAT.format(new Date(carData.getTime())), carData.getHappy())));
+
+        if (!carData.getSendingVideo()) {
+            needToSendVideoTarget = true;
+        }
     }
 
     public void setImage(Image image) {

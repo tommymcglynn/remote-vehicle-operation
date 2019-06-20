@@ -1,4 +1,4 @@
-package com.mcglynn.rvo.util;
+package com.mcglynn.rvo.stream;
 
 import java.util.List;
 
@@ -8,6 +8,10 @@ public class StreamMarkerData {
 
     public StreamMarkerData(List<Index> indices) {
         this.indices = indices;
+    }
+
+    public List<Index> getIndices() {
+        return indices;
     }
 
     public static final class Index {

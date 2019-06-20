@@ -1,12 +1,10 @@
-package com.mcglynn.rvo.util;
+package com.mcglynn.rvo.stream;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.spy;
 
 public class BufferReceiverTest {
 
@@ -25,7 +22,7 @@ public class BufferReceiverTest {
     @Before
     public void before() {
         output = new ArrayList<>();
-        streamMarker = spy(new StreamMarker(new byte[]{1, 2, 10, 20}));
+        streamMarker = new StreamMarker(new byte[]{1, 2, 10, 20});
         bufferReceiver = new BufferReceiver<>(this::stringProcessor, s -> output.add(s), streamMarker, 1000);
     }
 
@@ -59,17 +56,6 @@ public class BufferReceiverTest {
         bufferReceiver.put(Unpooled.copiedBuffer(streamMarker.wrapData("Final message".getBytes())));
         assertEquals(2, output.size());
         assertEquals("Final message", output.get(1));
-    }
-
-    @Test
-    public void multiMarkerPut() throws IOException {
-        byte[] multiMarkerData = combine(streamMarker.wrapData("Hello".getBytes()),
-                streamMarker.wrapData("How ya doing".getBytes()),
-                streamMarker.wrapData("Bye".getBytes()));
-
-        bufferReceiver.put(Unpooled.copiedBuffer(multiMarkerData));
-        assertEquals(1, output.size());
-        assertEquals("Bye", output.get(0));
     }
 
     private List<byte[]> splitDataInTwo(byte[] data) {
@@ -106,16 +92,4 @@ public class BufferReceiverTest {
         return out;
     }
 
-    private byte[] combine(byte[]... datas) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        for (byte[] data : datas) {
-            try {
-                outputStream.write(data);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to write data", e);
-            }
-        }
-
-        return outputStream.toByteArray();
-    }
 }

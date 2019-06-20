@@ -32,6 +32,7 @@ public class CarControllerClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         LOGGER.info("Channel active");
+        carController.setVideoReceive(config.getVideoReceiveHost(), config.getVideoReceivePort());
         controlLoop(ctx);
     }
 

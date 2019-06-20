@@ -1,4 +1,4 @@
-package com.mcglynn.rvo.util;
+package com.mcglynn.rvo.stream;
 
 import io.netty.buffer.ByteBuf;
 import org.slf4j.Logger;

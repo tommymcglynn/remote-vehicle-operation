@@ -9,9 +9,12 @@ message CarControllerCommand {
     uint32 throttle = 3;
     sint32 steer = 4;
     bool reverse = 5;
+    string video_target_host = 6;
+    uint32 video_target_port = 7;
 }
 
 message CarData {
     uint64 time = 1;
     bool happy = 2;
+    bool sending_video = 3;
 }

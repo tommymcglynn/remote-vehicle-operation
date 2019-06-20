@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -72,12 +73,15 @@ public class CarControllerApplication extends Application {
 
         carHost = System.getProperty("car.host", "localhost");
         carPort = Integer.parseInt(System.getProperty("car.port", "8080"));
+        String videoReceiveHost = InetAddress.getLocalHost().getHostName();
         videoReceivePort = Integer.parseInt(System.getProperty("video.receive.port", "8090"));
         int commandDelayMin = Integer.parseInt(System.getProperty("controller.command.delay.min", "30"));
         int commandDelayMax = Integer.parseInt(System.getProperty("controller.command.delay.max", "300"));
         CarClientConfig controllerConfig = CarClientConfigBuilder.aCarClientConfig()
                 .withCommandDelayMin(commandDelayMin)
                 .withCommandDelayMax(commandDelayMax)
+                .withVideoReceiveHost(videoReceiveHost)
+                .withVideoReceivePort(videoReceivePort)
                 .build();
         carConnectionGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();

@@ -22,4 +22,9 @@ public class CarControllerHello implements CarController {
     public void handleCarData(CarControlProtos.CarData carData) {
         LOGGER.info(String.format("Handle car data: %s", carData));
     }
+
+    @Override
+    public void setVideoReceive(String videoReceiveHost, int videoReceivePort) {
+
+    }
 }

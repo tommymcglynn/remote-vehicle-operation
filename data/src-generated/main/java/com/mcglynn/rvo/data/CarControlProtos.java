@@ -42,6 +42,21 @@ public final class CarControlProtos {
      * <code>bool reverse = 5;</code>
      */
     boolean getReverse();
+
+    /**
+     * <code>string video_target_host = 6;</code>
+     */
+    java.lang.String getVideoTargetHost();
+    /**
+     * <code>string video_target_host = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getVideoTargetHostBytes();
+
+    /**
+     * <code>uint32 video_target_port = 7;</code>
+     */
+    int getVideoTargetPort();
   }
   /**
    * Protobuf type {@code CarControllerCommand}
@@ -56,6 +71,7 @@ public final class CarControlProtos {
       super(builder);
     }
     private CarControllerCommand() {
+      videoTargetHost_ = "";
     }
 
     @java.lang.Override
@@ -105,6 +121,17 @@ public final class CarControlProtos {
             case 40: {
 
               reverse_ = input.readBool();
+              break;
+            }
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              videoTargetHost_ = s;
+              break;
+            }
+            case 56: {
+
+              videoTargetPort_ = input.readUInt32();
               break;
             }
             default: {
@@ -184,6 +211,49 @@ public final class CarControlProtos {
       return reverse_;
     }
 
+    public static final int VIDEO_TARGET_HOST_FIELD_NUMBER = 6;
+    private volatile java.lang.Object videoTargetHost_;
+    /**
+     * <code>string video_target_host = 6;</code>
+     */
+    public java.lang.String getVideoTargetHost() {
+      java.lang.Object ref = videoTargetHost_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        videoTargetHost_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string video_target_host = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getVideoTargetHostBytes() {
+      java.lang.Object ref = videoTargetHost_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        videoTargetHost_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int VIDEO_TARGET_PORT_FIELD_NUMBER = 7;
+    private int videoTargetPort_;
+    /**
+     * <code>uint32 video_target_port = 7;</code>
+     */
+    public int getVideoTargetPort() {
+      return videoTargetPort_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -212,6 +282,12 @@ public final class CarControlProtos {
       }
       if (reverse_ != false) {
         output.writeBool(5, reverse_);
+      }
+      if (!getVideoTargetHostBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, videoTargetHost_);
+      }
+      if (videoTargetPort_ != 0) {
+        output.writeUInt32(7, videoTargetPort_);
       }
       unknownFields.writeTo(output);
     }
@@ -242,6 +318,13 @@ public final class CarControlProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(5, reverse_);
       }
+      if (!getVideoTargetHostBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, videoTargetHost_);
+      }
+      if (videoTargetPort_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(7, videoTargetPort_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -267,6 +350,10 @@ public final class CarControlProtos {
           != other.getSteer()) return false;
       if (getReverse()
           != other.getReverse()) return false;
+      if (!getVideoTargetHost()
+          .equals(other.getVideoTargetHost())) return false;
+      if (getVideoTargetPort()
+          != other.getVideoTargetPort()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -290,6 +377,10 @@ public final class CarControlProtos {
       hash = (37 * hash) + REVERSE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getReverse());
+      hash = (37 * hash) + VIDEO_TARGET_HOST_FIELD_NUMBER;
+      hash = (53 * hash) + getVideoTargetHost().hashCode();
+      hash = (37 * hash) + VIDEO_TARGET_PORT_FIELD_NUMBER;
+      hash = (53 * hash) + getVideoTargetPort();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -433,6 +524,10 @@ public final class CarControlProtos {
 
         reverse_ = false;
 
+        videoTargetHost_ = "";
+
+        videoTargetPort_ = 0;
+
         return this;
       }
 
@@ -464,6 +559,8 @@ public final class CarControlProtos {
         result.throttle_ = throttle_;
         result.steer_ = steer_;
         result.reverse_ = reverse_;
+        result.videoTargetHost_ = videoTargetHost_;
+        result.videoTargetPort_ = videoTargetPort_;
         onBuilt();
         return result;
       }
@@ -526,6 +623,13 @@ public final class CarControlProtos {
         }
         if (other.getReverse() != false) {
           setReverse(other.getReverse());
+        }
+        if (!other.getVideoTargetHost().isEmpty()) {
+          videoTargetHost_ = other.videoTargetHost_;
+          onChanged();
+        }
+        if (other.getVideoTargetPort() != 0) {
+          setVideoTargetPort(other.getVideoTargetPort());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -685,6 +789,101 @@ public final class CarControlProtos {
         onChanged();
         return this;
       }
+
+      private java.lang.Object videoTargetHost_ = "";
+      /**
+       * <code>string video_target_host = 6;</code>
+       */
+      public java.lang.String getVideoTargetHost() {
+        java.lang.Object ref = videoTargetHost_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          videoTargetHost_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string video_target_host = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getVideoTargetHostBytes() {
+        java.lang.Object ref = videoTargetHost_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          videoTargetHost_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string video_target_host = 6;</code>
+       */
+      public Builder setVideoTargetHost(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        videoTargetHost_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string video_target_host = 6;</code>
+       */
+      public Builder clearVideoTargetHost() {
+        
+        videoTargetHost_ = getDefaultInstance().getVideoTargetHost();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string video_target_host = 6;</code>
+       */
+      public Builder setVideoTargetHostBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        videoTargetHost_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int videoTargetPort_ ;
+      /**
+       * <code>uint32 video_target_port = 7;</code>
+       */
+      public int getVideoTargetPort() {
+        return videoTargetPort_;
+      }
+      /**
+       * <code>uint32 video_target_port = 7;</code>
+       */
+      public Builder setVideoTargetPort(int value) {
+        
+        videoTargetPort_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>uint32 video_target_port = 7;</code>
+       */
+      public Builder clearVideoTargetPort() {
+        
+        videoTargetPort_ = 0;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -751,6 +950,11 @@ public final class CarControlProtos {
      * <code>bool happy = 2;</code>
      */
     boolean getHappy();
+
+    /**
+     * <code>bool sending_video = 3;</code>
+     */
+    boolean getSendingVideo();
   }
   /**
    * Protobuf type {@code CarData}
@@ -799,6 +1003,11 @@ public final class CarControlProtos {
             case 16: {
 
               happy_ = input.readBool();
+              break;
+            }
+            case 24: {
+
+              sendingVideo_ = input.readBool();
               break;
             }
             default: {
@@ -851,6 +1060,15 @@ public final class CarControlProtos {
       return happy_;
     }
 
+    public static final int SENDING_VIDEO_FIELD_NUMBER = 3;
+    private boolean sendingVideo_;
+    /**
+     * <code>bool sending_video = 3;</code>
+     */
+    public boolean getSendingVideo() {
+      return sendingVideo_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -871,6 +1089,9 @@ public final class CarControlProtos {
       if (happy_ != false) {
         output.writeBool(2, happy_);
       }
+      if (sendingVideo_ != false) {
+        output.writeBool(3, sendingVideo_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -887,6 +1108,10 @@ public final class CarControlProtos {
       if (happy_ != false) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(2, happy_);
+      }
+      if (sendingVideo_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, sendingVideo_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -907,6 +1132,8 @@ public final class CarControlProtos {
           != other.getTime()) return false;
       if (getHappy()
           != other.getHappy()) return false;
+      if (getSendingVideo()
+          != other.getSendingVideo()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -924,6 +1151,9 @@ public final class CarControlProtos {
       hash = (37 * hash) + HAPPY_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getHappy());
+      hash = (37 * hash) + SENDING_VIDEO_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getSendingVideo());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1061,6 +1291,8 @@ public final class CarControlProtos {
 
         happy_ = false;
 
+        sendingVideo_ = false;
+
         return this;
       }
 
@@ -1089,6 +1321,7 @@ public final class CarControlProtos {
         com.mcglynn.rvo.data.CarControlProtos.CarData result = new com.mcglynn.rvo.data.CarControlProtos.CarData(this);
         result.time_ = time_;
         result.happy_ = happy_;
+        result.sendingVideo_ = sendingVideo_;
         onBuilt();
         return result;
       }
@@ -1142,6 +1375,9 @@ public final class CarControlProtos {
         }
         if (other.getHappy() != false) {
           setHappy(other.getHappy());
+        }
+        if (other.getSendingVideo() != false) {
+          setSendingVideo(other.getSendingVideo());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1223,6 +1459,32 @@ public final class CarControlProtos {
         onChanged();
         return this;
       }
+
+      private boolean sendingVideo_ ;
+      /**
+       * <code>bool sending_video = 3;</code>
+       */
+      public boolean getSendingVideo() {
+        return sendingVideo_;
+      }
+      /**
+       * <code>bool sending_video = 3;</code>
+       */
+      public Builder setSendingVideo(boolean value) {
+        
+        sendingVideo_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool sending_video = 3;</code>
+       */
+      public Builder clearSendingVideo() {
+        
+        sendingVideo_ = false;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1296,12 +1558,14 @@ public final class CarControlProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n0com/mcglynn/rvo/data/car_controller_pr" +
-      "otos.proto\"e\n\024CarControllerCommand\022\014\n\004ti" +
-      "me\030\001 \001(\004\022\r\n\005brake\030\002 \001(\r\022\020\n\010throttle\030\003 \001(" +
-      "\r\022\r\n\005steer\030\004 \001(\021\022\017\n\007reverse\030\005 \001(\010\"&\n\007Car" +
-      "Data\022\014\n\004time\030\001 \001(\004\022\r\n\005happy\030\002 \001(\010B(\n\024com" +
-      ".mcglynn.rvo.dataB\020CarControlProtosb\006pro" +
-      "to3"
+      "otos.proto\"\233\001\n\024CarControllerCommand\022\014\n\004t" +
+      "ime\030\001 \001(\004\022\r\n\005brake\030\002 \001(\r\022\020\n\010throttle\030\003 \001" +
+      "(\r\022\r\n\005steer\030\004 \001(\021\022\017\n\007reverse\030\005 \001(\010\022\031\n\021vi" +
+      "deo_target_host\030\006 \001(\t\022\031\n\021video_target_po" +
+      "rt\030\007 \001(\r\"=\n\007CarData\022\014\n\004time\030\001 \001(\004\022\r\n\005hap" +
+      "py\030\002 \001(\010\022\025\n\rsending_video\030\003 \001(\010B(\n\024com.m" +
+      "cglynn.rvo.dataB\020CarControlProtosb\006proto" +
+      "3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1320,13 +1584,13 @@ public final class CarControlProtos {
     internal_static_CarControllerCommand_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CarControllerCommand_descriptor,
-        new java.lang.String[] { "Time", "Brake", "Throttle", "Steer", "Reverse", });
+        new java.lang.String[] { "Time", "Brake", "Throttle", "Steer", "Reverse", "VideoTargetHost", "VideoTargetPort", });
     internal_static_CarData_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_CarData_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_CarData_descriptor,
-        new java.lang.String[] { "Time", "Happy", });
+        new java.lang.String[] { "Time", "Happy", "SendingVideo", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

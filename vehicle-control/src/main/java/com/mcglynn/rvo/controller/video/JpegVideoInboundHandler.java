@@ -1,7 +1,7 @@
 package com.mcglynn.rvo.controller.video;
 
 import com.mcglynn.rvo.image.ImageBufferReceiver;
-import com.mcglynn.rvo.util.StreamMarker;
+import com.mcglynn.rvo.stream.StreamMarker;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

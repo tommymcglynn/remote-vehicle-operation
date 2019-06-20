@@ -1,5 +1,7 @@
 package com.mcglynn.rvo.util;
 
+import com.mcglynn.rvo.stream.StreamMarker;
+
 public class Constants {
     public static final double MAX_THROTTLE = 100;
     private static final double MAX_BRAKE = 100;

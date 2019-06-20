@@ -1,7 +1,7 @@
 package com.mcglynn.rvo.image;
 
-import com.mcglynn.rvo.util.BufferReceiver;
-import com.mcglynn.rvo.util.StreamMarker;
+import com.mcglynn.rvo.stream.BufferReceiver;
+import com.mcglynn.rvo.stream.StreamMarker;
 import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

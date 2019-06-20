@@ -58,21 +58,20 @@ public class CameraCapture {
 
     public synchronized void stopCamera() {
         if (!isCameraActive) return;
-
         LOGGER.info("Stopping camera");
-
         timer.shutdown();
-
-        if (capture.isOpened())
-        {
-            // release the camera
-            capture.release();
-        }
-
         isCameraActive = false;
     }
 
-    public boolean isCapturing() {
+    public synchronized void close() {
+        stopCamera();
+        if (capture.isOpened()) {
+            // release the camera
+            capture.release();
+        }
+    }
+
+    public boolean isCameraActive() {
         return isCameraActive;
     }
 }

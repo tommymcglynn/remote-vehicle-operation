@@ -1,4 +1,4 @@
-package com.mcglynn.rvo.util;
+package com.mcglynn.rvo.stream;
 
 import java.io.ByteArrayInputStream;
 
