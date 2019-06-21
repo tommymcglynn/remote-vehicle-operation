@@ -29,13 +29,14 @@ public class CarNodeApplication {
         LOGGER.warn("Starting!");
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
         OutErrLogger.setOutAndErrToLog();
+        LOGGER.info("java.library.path: {}", System.getProperty("java.library.path"));
         String opencvNativeLibrary = Core.NATIVE_LIBRARY_NAME;
         LOGGER.warn("opencvNativeLibrary: {}", opencvNativeLibrary);
         System.loadLibrary(opencvNativeLibrary);
 
         int port = Integer.parseInt(System.getProperty("car.port", "8080"));
         String carNodeClassName = System.getProperty("car.node.class", "com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode");
-        LOGGER.info("carNodeClassName: {}", carNodeClassName);
+        LOGGER.info("car.node.class: {}", carNodeClassName);
         CarNode carNode = initCarNode(carNodeClassName);
         bossGroup = new NioEventLoopGroup(); // (1)
         workerGroup = new NioEventLoopGroup();

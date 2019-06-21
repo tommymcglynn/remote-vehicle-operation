@@ -73,10 +73,16 @@ public class CarControllerApplication extends Application {
 
         carHost = System.getProperty("car.host", "localhost");
         carPort = Integer.parseInt(System.getProperty("car.port", "8080"));
-        String videoReceiveHost = InetAddress.getLocalHost().getHostName();
+        String videoReceiveHost = System.getProperty("video.receive.host", InetAddress.getLocalHost().getHostAddress());
         videoReceivePort = Integer.parseInt(System.getProperty("video.receive.port", "8090"));
         int commandDelayMin = Integer.parseInt(System.getProperty("controller.command.delay.min", "30"));
         int commandDelayMax = Integer.parseInt(System.getProperty("controller.command.delay.max", "300"));
+        LOGGER.info("car.host: {}", carHost);
+        LOGGER.info("car.port: {}", carPort);
+        LOGGER.info("video.receive.host: {}", videoReceiveHost);
+        LOGGER.info("video.receive.port: {}", videoReceivePort);
+        LOGGER.info("controller.command.delay.min: {}", commandDelayMin);
+        LOGGER.info("controller.command.delay.max: {}", commandDelayMax);
         CarClientConfig controllerConfig = CarClientConfigBuilder.aCarClientConfig()
                 .withCommandDelayMin(commandDelayMin)
                 .withCommandDelayMax(commandDelayMax)
