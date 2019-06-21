@@ -7,12 +7,15 @@ Accepts car controller commands, translates commands into vehicle control and re
 ### Deploy Vehicle Node
 Use a gradle task to compile and deploy the vehicle application. The vehicle server will be restarted.
 
-    ./gradlew vehicle-node:deploy
+    ./gradlew vehicle-node:deploy -PvehicleHost=192.168.1.85
 
 ### Run Configuration
-These are system properties which can be used to configure the vehicle node.
+These are properties which can be used to configure the vehicle node.
 
+JVM
 * java.library.path - Must be set to the location of compiled native OpenCV libraries. Example: /Users/tommy/opencv/build/lib
+
+System
 * car.port (default: 8080) - This is the port that the vehicle server will run on.
 * car.node.class (default: com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode) - This is the implementation class of CarNode which will be used to handle car commands and operate a vehicle.
 
@@ -33,10 +36,6 @@ Configure these properties appropriately in your Gradle directory "~/.gradle"
 ### Vehicle Logs
 Vehicle logs are at $home/logs/vehicle-node.log
 
-
-## FourWheelToyCarNode
-This is an implementation of CarNode which controls a Raspberry Pi based toy car.
-
 ### Raspberry Pi Setup
 These are initial setup steps.
 
@@ -48,8 +47,9 @@ These are initial setup steps.
 * Create a new RSA key pair on the development machine so you can connect and deploy to the Pi. ie: "vehicle_id_rsa"
 * Copy the contents of the public portion of the key "vehicle_id_rsa.pub" and past them into the authorized_keys file on the Pi machine "/home/vehicle/.ssh/authorized_keys"
 * Read and update "vehicle-node.sh" which is responsible for starting and stopping the vehicle-node app on the Pi machine. This gets copied to the Pi through a gradle task.
-* Read and update "build.gradle" to ensure all parameters are correct. In particular, check the "vehicleHost" to ensure it is the correct host where you can reach the Pi machine.
+* Read and update "build.gradle" to ensure all parameters are correct.
 * Install Pi4J. Allows control of GPIO pins from Java: https://pi4j.com
+* Compile and install OpenCV. This has been done in "/home/vehicle/opencv": https://docs.opencv.org/master/d9/d52/tutorial_java_dev_intro.html
 
 ### Motor Control
 6 GPIO pins are used to control motor function.

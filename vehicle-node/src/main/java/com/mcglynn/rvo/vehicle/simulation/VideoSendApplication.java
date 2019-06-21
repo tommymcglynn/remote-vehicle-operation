@@ -10,7 +10,7 @@ public class VideoSendApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(VideoSendApplication.class);
     private static final int DEFAULT_VIDEO_SEND_PORT = 8090;
 
-    private CameraVideoSender cameraVideoSender = new CameraVideoSender();
+    private CameraVideoSender cameraVideoSender = new CameraVideoSender(0);
 
     public static void main(String[] args) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);

@@ -10,7 +10,7 @@ public class CarNodeHello implements CarNode {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CarNodeHello.class);
 
-    private CameraVideoSender cameraVideoSender = new CameraVideoSender();
+    private CameraVideoSender cameraVideoSender = new CameraVideoSender(0);
 
     @Override
     public CarControlProtos.CarData getCurrentData() {

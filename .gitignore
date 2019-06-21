@@ -3,6 +3,7 @@
 build/
 logs/
 out/
+tmp/
 
 .DS_Store
 *.log

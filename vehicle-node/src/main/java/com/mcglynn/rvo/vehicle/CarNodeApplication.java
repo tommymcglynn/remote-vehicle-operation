@@ -1,6 +1,7 @@
 package com.mcglynn.rvo.vehicle;
 
 import com.mcglynn.rvo.data.CarControlProtos;
+import com.mcglynn.rvo.util.OutErrLogger;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -26,11 +27,15 @@ public class CarNodeApplication {
 
     public static void main(String[] args) throws Exception {
         LOGGER.warn("Starting!");
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
+        OutErrLogger.setOutAndErrToLog();
+        String opencvNativeLibrary = Core.NATIVE_LIBRARY_NAME;
+        LOGGER.warn("opencvNativeLibrary: {}", opencvNativeLibrary);
+        System.loadLibrary(opencvNativeLibrary);
 
         int port = Integer.parseInt(System.getProperty("car.port", "8080"));
         String carNodeClassName = System.getProperty("car.node.class", "com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode");
+        LOGGER.info("carNodeClassName: {}", carNodeClassName);
         CarNode carNode = initCarNode(carNodeClassName);
         bossGroup = new NioEventLoopGroup(); // (1)
         workerGroup = new NioEventLoopGroup();
@@ -51,6 +56,7 @@ public class CarNodeApplication {
                 .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
 
         // Bind and start to accept incoming connections.
+        LOGGER.info("Will start accepting connections: port({})", port);
         ChannelFuture f = b.bind(port).sync(); // (7)
 
         // Wait until the server socket is closed.

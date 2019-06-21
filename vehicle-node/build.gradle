@@ -10,6 +10,9 @@ repositories {
 dependencies {
     compile project(':data')
     compile project(':shared')
+
+    compile fileTree(dir: "${opencvDir}/bin", include: "*.jar")
+    
     compile 'com.pi4j:pi4j-core:1.2'
     compile 'org.pushing-pixels:radiance-trident:1.0.2'
     compile 'net.bramp.ffmpeg:ffmpeg:0.6.2'
@@ -25,7 +28,6 @@ jar {
 }
 
 def home = System.getenv("HOME")
-def vehicleHost = '192.168.1.25'
 def vehicleHome = '/home/vehicle'
 def vehicleAppDir = "${vehicleHome}/vehicle-node"
 def serviceScriptName = 'vehicle-node.sh'

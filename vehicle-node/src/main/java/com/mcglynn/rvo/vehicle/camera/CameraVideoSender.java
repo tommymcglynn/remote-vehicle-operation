@@ -23,11 +23,20 @@ public class CameraVideoSender {
     private static final int CAMERA_FRAMES_PER_SECOND = 15;
     private static final int DEFAULT_CAMERA_ID = 1;
 
+    private int cameraId;
     private String videoTargetHost = null;
     private int videoTargetPort = 0;
     private CameraCapture cameraCapture;
     private DatagramSocket videoSocket;
     private InetAddress videoTargetAddress;
+
+    public CameraVideoSender() {
+        this.cameraId = DEFAULT_CAMERA_ID;
+    }
+
+    public CameraVideoSender(int cameraId) {
+        this.cameraId = cameraId;
+    }
 
     public void setVideoTargetAndStartSendingVideo(String host, int port) {
         if (cameraCapture != null) {
@@ -48,7 +57,7 @@ public class CameraVideoSender {
         }
         videoTargetPort = port;
 
-        cameraCapture = new CameraCapture(DEFAULT_CAMERA_ID, CAMERA_FRAMES_PER_SECOND, this::handleCameraFrame);
+        cameraCapture = new CameraCapture(cameraId, CAMERA_FRAMES_PER_SECOND, this::handleCameraFrame);
         cameraCapture.startCamera();
     }
 
