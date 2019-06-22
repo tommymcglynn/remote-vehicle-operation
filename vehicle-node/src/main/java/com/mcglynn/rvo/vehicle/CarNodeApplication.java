@@ -87,8 +87,13 @@ public class CarNodeApplication {
 
     private static void shutDown() {
         LOGGER.warn("Shutdown!");
-        workerGroup.shutdownGracefully();
-        bossGroup.shutdownGracefully();
+        if (workerGroup != null) {
+            workerGroup.shutdownGracefully();
+        }
+
+        if (bossGroup != null) {
+            bossGroup.shutdownGracefully();
+        }
     }
 
     public static class ShutdownThread extends Thread {

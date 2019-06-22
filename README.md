@@ -4,6 +4,30 @@ Remotely operate a vehicle. Currently designed to operate a Raspberry Pi equiped
 ## Vehicle Node
 Accepts car controller commands, translates commands into vehicle control and responds with vehicle state information. Also sends video data to the target specified by controller command.
 
+### Build and Deployment
+The vehicle-node application is built as a Docker image on the vehicle system itself. It can then be run as a Docker container on the vehicle.
+
+1. Make code changes to vehicle logic
+2. SSH to vehicle
+
+        ssh vehicle@192.168.1.12
+
+3. Pull latest code
+
+	    // Clone first if you haven't done so already
+        git clone && cd remote-vehicle-operation
+        // Otherwise, pull latest code
+        cd remote-vehicle-operation && git pull
+
+4. Build Docker image
+	
+	    docker build -t rvo-base -f ./docker/base/Dockerfile .
+
+5. Run as Docker container
+
+	    docker run -i -t --privileged -p 8080:8080 rvo-base
+
+
 ### Run Configuration
 These are properties which can be used to configure the vehicle node.
 
@@ -48,9 +72,22 @@ These are initial setup steps.
 * Enable Pi Camera drivers for OpenCV
 
         sudo modprobe bcm2835-v4l2
+
 * Add vehicle user to video group, for access to camera
 
         sudo usermod -a -G video vehicle
+
+* Install Docker
+
+        # Download and run Docker install script
+        sudo curl -sSL https://get.docker.com | sh
+        # Enable auto-start
+        sudo systemctl enable docker
+        # Start docker
+        sudo systemctl start docker
+        # Allow vehicle user to use Docker client
+        sudo usermod -aG docker vehicle
+    
 
 ### Motor Control
 6 GPIO pins are used to control motor function.
