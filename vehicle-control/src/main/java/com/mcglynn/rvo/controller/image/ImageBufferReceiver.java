@@ -1,4 +1,4 @@
-package com.mcglynn.rvo.image;
+package com.mcglynn.rvo.controller.image;
 
 import com.mcglynn.rvo.stream.BufferReceiver;
 import com.mcglynn.rvo.stream.StreamMarker;

@@ -13,9 +13,11 @@ dependencies {
     compile("com.google.protobuf:protobuf-java:3.7.0")
 }
 
+def protocPath = hasProperty('protoc.path') ? getProperty('protoc.path') : '/usr/local/bin/protoc'
+
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.7.0"
+        path = protocPath
     }
     generatedFilesBaseDir = "$projectDir/src-generated"
 }

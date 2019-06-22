@@ -4,11 +4,6 @@ Remotely operate a vehicle. Currently designed to operate a Raspberry Pi equiped
 ## Vehicle Node
 Accepts car controller commands, translates commands into vehicle control and responds with vehicle state information. Also sends video data to the target specified by controller command.
 
-### Deploy Vehicle Node
-Use a gradle task to compile and deploy the vehicle application. The vehicle server will be restarted.
-
-    ./gradlew vehicle-node:deploy -PvehicleHost=192.168.1.85
-
 ### Run Configuration
 These are properties which can be used to configure the vehicle node.
 
@@ -16,15 +11,14 @@ JVM
 * java.library.path - Must be set to the location of compiled native OpenCV libraries. Example: /Users/tommy/opencv/build/lib
 
 System
+* protoc.path (default: /usr/local/bin/protoc) - Points to protoc executable for compiling Protocol Buffers
+* opencv.dir (default: /home/vehicle/opencv) - Points to OpenCV native library directory
 * car.port (default: 8080) - This is the port that the vehicle server will run on.
 * car.node.class (default: com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode) - This is the implementation class of CarNode which will be used to handle car commands and operate a vehicle.
+* camera.id (default: 0) - Camera ID to use for video capture
 
-### Build Configuration
-Configure these properties appropriately in your Gradle directory "~/.gradle"
+        ./gradlew vehicle-node:run -Pprotoc.path=/home/vehicle/src/protoc -Popencv.dir=/home/vehicle/opencv-3.4.6/build -Pcar.node.class=com.mcglynn.rvo.vehicle.toy.FourWheelToyCarNode -Pcamera.id=-1
 
-    // This points to compiled OpenCV bindings for Java
-    // See https://github.com/opencv/opencv
-    opencvDir=/Users/tommy/opencv/build
 
 ### Vehicle Node Architecture
 
@@ -50,6 +44,13 @@ These are initial setup steps.
 * Read and update "build.gradle" to ensure all parameters are correct.
 * Install Pi4J. Allows control of GPIO pins from Java: https://pi4j.com
 * Compile and install OpenCV. This has been done in "/home/vehicle/opencv": https://docs.opencv.org/master/d9/d52/tutorial_java_dev_intro.html
+* Enable Pi Camera via raspi-config
+* Enable Pi Camera drivers for OpenCV
+
+        sudo modprobe bcm2835-v4l2
+* Add vehicle user to video group, for access to camera
+
+        sudo usermod -a -G video vehicle
 
 ### Motor Control
 6 GPIO pins are used to control motor function.

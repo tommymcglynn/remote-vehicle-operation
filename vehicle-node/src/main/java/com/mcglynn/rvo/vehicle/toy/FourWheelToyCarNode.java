@@ -3,6 +3,7 @@ package com.mcglynn.rvo.vehicle.toy;
 import com.mcglynn.rvo.data.CarControlProtos;
 import com.mcglynn.rvo.util.Constants;
 import com.mcglynn.rvo.vehicle.CarNode;
+import com.mcglynn.rvo.vehicle.camera.CameraVideoSender;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -37,6 +38,7 @@ public class FourWheelToyCarNode implements CarNode {
     private double rightDriveTarget;
     private Timeline leftDriveTimeline;
     private Timeline rightDriveTimeline;
+    private CameraVideoSender cameraVideoSender;
 
     FourWheelToyCarNode(double steerDriveReduction, double maxDriveDelayMillis) {
         this.steerDriveReduction = steerDriveReduction;
@@ -47,6 +49,10 @@ public class FourWheelToyCarNode implements CarNode {
         rightDriveTarget = 0d;
         leftDriveTimeline = null;
         rightDriveTimeline = null;
+
+        int cameraId = Integer.parseInt(System.getProperty("camera.id", "0"));
+        LOGGER.info("camera.id: {}", cameraId);
+        cameraVideoSender = new CameraVideoSender(cameraId);
     }
 
     public FourWheelToyCarNode() {
@@ -76,6 +82,7 @@ public class FourWheelToyCarNode implements CarNode {
         return CarControlProtos.CarData.newBuilder()
                 .setTime(System.currentTimeMillis())
                 .setHappy(true)
+                .setSendingVideo(cameraVideoSender.isSendingVideo())
                 .build();
     }
 
@@ -112,6 +119,8 @@ public class FourWheelToyCarNode implements CarNode {
         }
 
         setDriveTarget(newLeftDrive, newRightDrive);
+
+        handleVideoTarget(command.getVideoTargetHost(), command.getVideoTargetPort());
     }
 
     Integer calculateDriveWithSteer(Integer drive, Integer steer) {
@@ -198,5 +207,13 @@ public class FourWheelToyCarNode implements CarNode {
         rightDriveTimeline.addPropertyToInterpolate("rightDrive", rightDrive, rightDriveTarget);
         rightDriveTimeline.setDuration(calculateDriveChangeDuration(rightDrive, rightDriveTarget));
         rightDriveTimeline.play();
+    }
+
+    private void handleVideoTarget(String videoTargetHost, int videoTargetPort) {
+        if (videoTargetHost.isEmpty() || videoTargetPort == 0) {
+            return;
+        }
+
+        cameraVideoSender.setVideoTargetAndStartSendingVideo(videoTargetHost, videoTargetPort);
     }
 }
