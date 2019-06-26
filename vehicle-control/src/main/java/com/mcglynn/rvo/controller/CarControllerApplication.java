@@ -67,7 +67,7 @@ public class CarControllerApplication extends Application {
         FXMLLoader loader = new FXMLLoader(uiViewResource);
         Parent root = loader.load();
         carControllerUi = loader.getController();
-        primaryStage.setTitle("Debug Car Controller");
+        primaryStage.setTitle("Car Controller");
         primaryStage.setScene(new Scene(root, 1400, 800));
         primaryStage.show();
 

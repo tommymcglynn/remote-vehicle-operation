@@ -57,7 +57,7 @@ public class CameraVideoSender {
         }
         videoTargetPort = port;
 
-        LOGGER.info("Start sending video: {}:{}", host, port);
+        LOGGER.info("Start sending video: cameraId({}) target({}:{})", cameraId, host, port);
         cameraCapture = new CameraCapture(cameraId, CAMERA_FRAMES_PER_SECOND, this::handleCameraFrame);
         cameraCapture.startCamera();
     }
