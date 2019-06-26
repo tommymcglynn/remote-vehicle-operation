@@ -1,9 +1,7 @@
 # Remote Vehicle Operation
 Remotely operate a vehicle. Currently designed to operate a Raspberry Pi equiped vehicle.
 
-![Remote Vehicle Operation - Title Image](https://www.dropbox.com/s/6tshswvccgkknis/rvo_title.png)
-
-[Video Demonstration](https://www.youtube.com/watch?v=Uds8QS7zHmM)
+[See Video Demonstration](https://www.youtube.com/watch?v=Uds8QS7zHmM)
 
 ## Vehicle Node
 Accepts car controller commands, translates commands into vehicle control and responds with vehicle state information. Also sends video data to the target specified by controller command.
